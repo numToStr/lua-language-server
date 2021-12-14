@@ -16,6 +16,10 @@ env:
 
 jobs:
   compile:
+    outputs:
+      linux: ${{ steps.exported.outputs.PKG_NAME_linux }}
+      darwin: ${{ steps.exported.outputs.PKG_NAME_darwin }}
+      windows: ${{ steps.exported.outputs.PKG_NAME_windows }}
     strategy:
       matrix:
         job:
@@ -113,3 +117,8 @@ jobs:
           files: |
             ${{ steps.vars.outputs.PKG_PATH }}
             ${{ steps.submodules.outputs.PKG_SUBMOD_PATH }}
+
+      - name: Export package name
+        id: exported
+        run: |
+          echo ::set-output name=PKG_NAME_${{ matrix.job.target }}::${PKG_NAME}
